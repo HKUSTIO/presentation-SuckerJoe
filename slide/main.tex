@@ -41,11 +41,11 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
-
+\usepackage{mathrsfs}
 % Title page information
-\title{Presentation Title}
-\subtitle{Subtitle}
-\author{Your Name}
+\title{Estimation and Inference in Mdoel with Partial Identification}
+\subtitle{from Chapter 5 in Handbook of Industrial Organization, Volume 4}
+\author{Xinrui Liu}
 \institute{Hong Kong University of Science and Technology}
 \date{\today}
 
@@ -62,53 +62,692 @@
 \end{frame}
 
 % Section 1
-\section{Introduction}
-\begin{frame}{Introduction}
+\section{Overview}
+
+\begin{frame}{Overview}
+\textbf{A formal framework of identification}
+\begin{itemize}
+    \item \textbf{Model:} a model $M$ is a set of functions or sets that satisfy some given restrictions.
     \begin{itemize}
-        \item First point
-        \item Second point
-        \item Third point
+        \item e.g. restrictions on regression functions, distribution functions of errors or other unobservables, utility functions, payoff matrices, or information sets.
+        \item A model value $m \in M$ is an element of $M$. Each model value $m \in M$ implies a particular Data Generating Procss (DGP).
+    \end{itemize}
+    \item \textbf{Data information:} $\phi$ is a set of constants and/or functions that we assume are known, or knowable, given the DGP.
+    \begin{itemize}
+        \item Once we obtain the data, we immediately know $\phi$. 
+        \item e.g. data distribution function, or some features of distributions like conditional means, quantiles, autocovariances, or regression coefficients.
+        \item Let $\phi =\Pi(m)$ be a function (or  a mapping) where $\Phi=\{\phi: \phi=\Pi(m), m \in M\}$ and $\Pi{:}M\to\Phi$.
+    \end{itemize}
+    
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+    \item \textbf{Parameters of interest:} A set of parameters $\theta$ is a set of unknown constants and/or functions that characterize or summarize relevant features of a model. 
+    \begin{itemize}
+        \item Basically, $\theta$ is anything we might want to estimate.
+        \item e.g. regression coefficients, or the sign of an elasticity, or an average treatment effect.
+        \item Let $\theta =\Delta(m)$ be a function (or a mapping) where $\Theta=\{\theta: \theta=\Delta(m), m \in M\}$ and $\Delta{:}M\to\Theta$.
+    \end{itemize}
+    \item \textbf{\ Structure:} The structure $s(\phi,\theta)$ is the  set of all model values m that can yield both the given values $\phi$ and $\theta$.
+    \begin{itemize}
+    \item $s(\phi,\theta)=\{m\in M:\phi=\Pi(m),\theta=\Delta(m) \}$
+    \item $s(\phi,\theta)$ embodies the relationship between the parameters $\theta$ and what we could learn from data, which is $\phi$.
+    \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{block}{Misspecification}
+        The model $M$ is defined to be misspecified if $ \forall~m \in M,  \phi_0\neq\Pi(m)$. Hence, the model $M$ is not misspecified if $ \exists~m_0 \in M~s.t.~\phi_0 = \Pi(m_0)$.
+    \end{block}
+
+    \begin{block}{Observationally Equivalent}
+        $\theta$ and $\tilde{\theta}$ are said to be observationally equivalent in the model $M$ if $\exists ~ \phi \in \Phi \mathrm{~s.t.~s}(\phi,\theta)\neq\varnothing~and~s(\phi,\tilde{\theta})\neq\varnothing$. Equivalently, $\theta$ is observationally equivalent to $\tilde{\theta}$ if $\exists ~ m,\tilde{m} \in M ~s.t.~\theta=\Delta(m)~and~\tilde{\theta}=\Delta(\tilde{m})$.
+    \end{block}
+
+    \begin{itemize}
+        \item Let $\phi_0$ be the value of $\phi$  that corresponds to the true DGP, that is, the DGP that actually generates what we can observe or know; $m_0$ doesn't conflict with what we can observe or know, which is $\phi_0$; $\theta_0$ is the true parameter of interest.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{block}{Identified Set} The identified set for $\theta_0$ is $\Theta_I = \{\theta \in \Theta: \theta~is~observationally~equivalent~to~\theta_0\}$.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Failure of Identification}
+        \begin{itemize}
+            \item $\theta_0$ is not identified if $\Theta_I = \emptyset$ i.e. the model is misspecified.
+        \end{itemize}
+
+        \item \textbf{Point Identification}
+        \begin{itemize}
+            \item $\theta_0$ is point identified if $card(\Theta_I)=1$ i.e. $\Theta_I$ is a singleton. 
+        \end{itemize}
+
+        \item \textbf{Partial Identification}
+        \begin{itemize}
+        \item  $\theta_0$ is partially identified (or set identified) if $1<card(\Theta_I)<card(\Theta)$ i.e. $\Theta_I$ is a proper subset of $\Theta$.
+        \end{itemize}
+        \item Other identifications: nonparametric identification, non-robust identification, nonstandard weak identification, sampling identification, semiparametric identification, structural identification, thin set identification \ldots
+        \item Under partial identification, the identified set can have a complicate
+        forms.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item Partial identification creates new and interesting issues for estimation and inference.
+        \item \textbf{Questions:}
+            \begin{itemize}
+            \item How do we estimate a set?
+            \item What is a “good” estimate of a set?
+            \item How do we construct a confidence region for a set?
+            \item Can we test an hypothesis about the true parameter under partial identification?
+            \end{itemize}
+        \item For more complicated models where the identified set is difficult to
+        describe explicitly, such questions are still the object of current
+        research.
+        \item We also discuss the difference between:
+        \begin{itemize}
+            \item covering \textbf{a set} v.s. covering \textbf{any point} of
+            the set
+            \item \textbf{pointwise} coverage v.s. \textbf{uniform} coverage
+        \end{itemize}     
+    \end{itemize}
+\end{frame}
+
+ %
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item We can try to obtain an estimate $\hat{\Theta}_I$ of the identified set $\Theta_I$.
+        \item Depending on the shape of the identified set, one can use different
+        approaches to obtain such an estimate.
+        \item Which \textbf{theoretical properties} should such an estimator $\hat{\Theta}_I$
+        have, independently of the method used to construct it?
+        \item This issue needs clarification, as most standard notions from point
+        estimation have no immediate counterpart for set estimation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item At a minimum, such an estimator should be \textbf{consistent}.
+        \item i.e. $\hat{\Theta}_I$ should get closer to $\Theta_I$ as the sample size
+        increases:$$d(\hat{\Theta}_I,\Theta_I)\overset{p}\to0$$ for some distance measure $d(\cdot,\cdot)$ that works for sets.
+        \item The literature on partial identification has most commonly used the
+        \textbf{Hausdorff distance}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{block}{Definition. (Hausdorff Distance)}
+        The Hausdorff distance between sets A and B is $$d_H(A,B)=\max\{\sup_{a\in A} \inf_{b\in B}d(a,b),\sup_{b\in B} \inf_{a\in A}d(a,b)\},$$ where $d(\cdot,\cdot)$ is a distance defined on the elements of the parameter space.
+    \end{block}
+
+    \begin{itemize}
+        \item The Hausdorff distance $d_H(A,B)$ is small when two conditions hold: every element $a \in A$ is “close” to at least one element of B and every element $b \in B$ is “close” to at least one element of A.
+        \item Other representation:$$\sup_{c\in A\cup B}|\inf_{a\in A}d(c,a)-\inf_{b\in B}d(c,b)|$$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{block}{Hausdorff Consistency} 
+        A sample analog estimator $\hat{\Theta}_I$ is consistent for $\Theta_I$ if $$d_H(\hat{\Theta}_I,\Theta_I)\stackrel{p}{\to}0~as~n\to\infty.$$
+    \end{block}
+    \begin{itemize}
+        \item Consistency seems easy to achieve.
+        \item Other common properties of point estimators, like \textbf{asymptotic
+        normality} or \textbf{efficiency} are difficult to transfer to set estimation
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{block}{Example (Interval Data)} 
+        This example is motivated by missing data problems, where $Y$ is an unobserved real random variable bracketed below by $Y_L$ and above by $Y_U$, both of which are observed real random variables. The parameter of interest $\theta = \mathbb{E}(Y)$ is known to satisfy the restriction $$\mathbb{E}(Y_L) \le \theta \le \mathbb{E}(Y_U).$$
+    Hence the identified set is an interval, $\Theta_I = \{\theta\in\Theta:\mathbb{E}(Y_L) \le \theta \le \mathbb{E}(Y_U)\}$.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Question:} It is natural to use the \textbf{plug-in estimator} i.e.  $\hat{\Theta}_I = [E_N(Y_L),E_N(Y_U)]$ where $E_N(\cdot)$ is the sample average. Is $\hat{\Theta}_I$ a consistent estimator for $\Theta_I$?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item The Hausdorff distance here for the plug-in estimator is $d_H(\Theta_I,\hat{\Theta}_{I})=$ $$\begin{cases}\max\{|E_N(Y_L)-\mathbb{E}(Y_L)|,|E_N(Y_U)-\mathbb{E}(Y_U)|\}&~if~E_N(Y_L)\leq E_N(Y_U)\\undefined&~if~E_N(Y_L)>E_N(Y_U)\end{cases}.$$
+        
+        \item \textbf{Case 1:} $\mathbb{E}(Y_L) < \mathbb{E}(Y_U)$ \\ 
+        Obviously, $P(E_N (Y_L) \le E_N (Y_U ))\to1$. By WLLN, we know $E_N(Y_L)\overset{p}\to\mathbb{E}(Y_L)$ and $E_N(Y_U)\overset{p}\to\mathbb{E}(Y_U)$. Then $d_H(\Theta_I,\hat{\Theta}_{I,N})=max\{o_p(1),o_p(1)\}=o_p(1)$ which means $\hat{\Theta}_{I}$ is a consistent estimator.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item  \textbf{Case 2:} $\mathbb{E}(Y_L) = \mathbb{E}(Y_U)$ \\ 
+        Now by CLT with with positive asymptotic variance, $P(E_N(Y_L)\leq E_N(Y_U))\equiv P(\sqrt{N}(E_N(Y_L)-E_N(Y_U))\leq0)\approx\Phi(0)=\frac{1}{2}$. In this case, the event $\{d_H(\Theta_I,\hat{\Theta}_{I}) ~is~undefined\}$  has a non-vanishing probability, which means $d_H(\hat{\Theta}_I,\Theta_I)\stackrel{p}\nrightarrow0$. Hence, $\hat{\Theta}_{I}$ is not consistent for the identified set.
+        \item If ${\Theta}_{I}$ is a \textbf{non-degenerate} interval, then the plug-in estimator $\hat{\Theta}_{I}$ is consistent. However, if ${\Theta}_{I}$ is a singleton, equivalent to $\theta_0$ being point identified, then $\hat{\Theta}_{I}$ is not consistent in general.
+        \item The plug-in estimator may \textbf{perform poorly} in finite samples when $\mathbb{E}(Y_L) \approx \mathbb{E}(Y_U)$.
+        \item \textbf{How to improve our estimation?}
+    \end{itemize}   
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item Consider the \textbf{$\epsilon_n$-expansion} of the original plug-in estimator.
+        \begin{itemize}
+            \item i.e. $\hat{\Theta}_{I,\epsilon} = [E_N(Y_L)-\epsilon_n,E_N(Y_U)+\epsilon_n]$ where $\epsilon_n$ is a sequence of positive numbers that converges to zero as $n\to\infty$.
+        \end{itemize}
+        \item Now  the distance for the modified estimator is $d_H(\Theta_I,\hat{\Theta}_{I,\epsilon_n})=$
+        $$\begin{cases}|E_N(Y_L)-\mathbb{E}(Y_L)-\epsilon_n|\lor|E_N(Y_U)-\mathbb{E}(Y_U)+\epsilon_n|&~if~E_N(Y_L)\leq E_N(Y_U)+2\epsilon_n\\undefined&~if~E_N(Y_L)>E_N(Y_U)+2\epsilon_n\end{cases}$$
+        \item \textbf{Claim:} If $\sqrt{n}\epsilon_n\to\infty$, then $\hat{\Theta}_{I,\epsilon_n}$ is a consistent estimator for the identified set. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item \textbf{Case 1:} $\mathbb{E}(Y_L) < \mathbb{E}(Y_U)$ \\
+        Obviously, $P(E_N(Y_L)-E_N(Y_U)\le2\epsilon_n)\geq P(E_N(Y_L)-E_N(Y_U)\le0)\to 1$. And if $E_N(Y_L) \le E_N(Y_U)$, then $d_H(\Theta_I,\hat{\Theta}_{I,\epsilon_n})=max\{o_p(1),o_p(1)\}=o_p(1)$ which means $\hat{\Theta}_{I,\epsilon_n}$ is a consistent estimator.
+        \item \textbf{Case 2:} $\mathbb{E}(Y_L) = \mathbb{E}(Y_U)$ \\
+        Now by CLT with with positive asymptotic variance, $P(E_N(Y_L) - E_N(Y_U) \leq 2\epsilon_n)\equiv P(\sqrt{n}(E_N(Y_L)-E_N(Y_U))\leq 2\sqrt{n}\epsilon_n)\approx\Phi(\infty)=1$ for sufficiently large $n$. By the same argument, $\hat{\Theta}_{I,\epsilon_n}$ is a consistent estimator.
+        \item That is to say, as long as the \textbf{rate of convergence} of $\epsilon_n$ is slower than $1/\sqrt{n}$, the $\epsilon_n$-expansion of the plug-in estimator is consistent for the identified set.
+        \item The formal framework will be discussed later.
+    \end{itemize}
+\end{frame}
+
+% Inference
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item Given nominal size level $\alpha$, we hope to construct a confidence set $CS_{n,\alpha}$.
+        \item \textbf{Question:} What should the confidence set cover (asymptotically)?
+        \item \textbf{The Identified Set v.s.  Elements of the Identified Set}
+        \begin{itemize}
+            \item Such a consideration does not arise in point identified models, when the identified set is a singleton.
+            \item Coverage of $\Theta_I$: $P(\Theta_I\subseteq CS_{n,\alpha})$.
+            \item Coverage of $\theta\in\Theta_I$: $P(\theta\in CS_{n,\alpha})$.
+        \end{itemize}
+        \item \textbf{Pointwise Inference v.s. Uniform Inference}
+        \begin{itemize}
+            \item Pointwise means (implicitly) assuming a single fixed DGP. 
+            \item Uniformity requires conditions that hold uniformly across a set of data generating processes i.e all $P\in\mathscr{P}$ where $\mathscr{P}$ is a space of possible DGPs.
+            \item Whether the sample size satisfying the coverage property depends on particular DGP or not.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item Different Targets:
+        $CS_{n,\alpha}$ is asymptotically valid
+        \begin{itemize}
+            \item \textbf{for pointwise coverage of the identified set} $$\liminf_{n\to\infty}P(\Theta_I\subseteq CS_{n,\alpha})\geq1-\alpha. $$
+            \item  \textbf{for pointwise coverage of the elements of the identified set} $$\liminf_{n\to\infty}\inf_{\theta^\in\Theta_I}P(\theta\in CS_{n,\alpha})\geq1-\alpha. $$
+            \item \textbf{for uniform coverage of the identified set} $$\liminf_{n\to\infty}\inf_{P\in\mathscr{P}}P(\Theta_I\subseteq CS_{n,\alpha})\geq1-\alpha. $$
+            \item \textbf{for uniform coverage of the elements of the identified set} $$\liminf_{n\to\infty}\inf_{P\in\mathscr{P}}\inf_{\theta\in\Theta_I}P(\theta\in CS_{n,\alpha})\geq1-\alpha. $$
+          \end{itemize}
+          \item "$\geq$" means being \textbf{conservative} while "$=$" means being \textbf{not conservative}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item By definition, a confidence set for the identified set is also a confidence set for the elements of the identified set, but a confidence set for the elements of the identified set is not necessarily a confidence set for the identified set.
+        \item Imbens and Manski (2004) argue further that confidence regions for  points in the identified set are generally of greater interest than confidence regions for the identified  set itself, as there is still only one “true” value for $\theta$ in the identified set.
+        \item Henry and Onatski (2012) provides a robust control argument for preferring inference for the identified set.
+    \end{itemize}
+\end{frame}
+
+% Moment Inequalities
+\section{Methods}
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        \item \textbf{Fact:} Some empirical models imply that the true value of the parameter $\theta_0$ satisfies restrictions of the form $\mathbb{E}(m(W,\theta_0))\geq0$, where $m(·) = (m_1(\cdot), m_2(\cdot), \ldots , m_J (\cdot))$ is a vector-valued function that is known by the econometrician.
+        \item \textbf{Moment Inequalities v.s. Moment Equalities}
+        \begin{itemize} 
+            \item Bisically, the moment inequality conditions are the generalization of the moment equality conditions.
+        
+            \item e.g. $\mathbb{E}(m_j(W,\theta_0))\geq0$ and $\mathbb{E}(m_k(W,\theta_0)) \le0$ where $m_j(W,\theta_0) = m_k(W,\theta_0)$ implies $\mathbb{E}(m_j(W,\theta_0))=\mathbb{E}(m_k(W,\theta_0))=0$ for some $j,k\in J$.
+        \end{itemize}
+        \item \textbf{Unconditional Moment Inequalities v.s. Conditional Moment Inequalities}
+        \begin{itemize} 
+        \item For unconditional moment inequalities, \\ $\Theta_I = \{\theta\in\Theta:\mathbb{E}(m(W,\theta))\geq0\}$.
+        \item For conditional moment inequalities, $\Theta_I = \{\theta\in\Theta:\mathbb{E}(m(W,\theta)|X=x)\geq0~for~all~x\}$.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+% Criterion function approach
+\begin{frame}{Methods: Criterion Function Approach}
+    \begin{itemize}
+        \item \textbf{Fact:} Some empirical models can be characterized by a non-negative objective function $Q(\theta)\geq0$ such that the identified set is $\Theta_I = \{\theta: Q(\theta) = 0\}$.
+        \item The moment inequality approach is a \textbf{special case} of the criterion function approach.
+        \item If $\theta_0$ satisfies $\mathbb{E}(m(W,\theta_0))\geq0$, then we can take $Q(\theta)=\|\min(\mathbb{E}(m(W,\theta)),0)\|^2$ such that $Q(\theta)=0 \iff \mathbb{E}(m(W,\theta_0))\geq0$
+        \item We can use sample objective function $Q_n(\theta)$ to estimates $Q(\theta)$: $Q_n(\theta)=\|\min(E_n(m(W,\theta)),0)\|^2$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Criterion Function Approach}
+    \begin{itemize}
+        \item Estimation of a model based on moment inequality conditions is \textbf{straightforward}.
+        \item Still be careful!
+        \item First idea would be to estimate the identified set by $\tilde{\Theta}_I = \{\theta: Q_n(\theta) = 0\}$.
+        \item But this does typically \textbf{not} work in applications!
+        \item \textbf{Reason:} In finite samples, $Q_n$ will often be positive with high probability even for values of $\theta$ within the identified set. Think of the interval data example!
+        \item \textbf{Intuition:} Consider the standard GMM case with equalities and overidentification.
+        \item $\tilde{\Theta}_I$ can be possibly empty when ${\Theta}_I$ is not, even in large samples.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Criterion Function Approach}
+    \begin{itemize}
+        \item \textbf{A feasible approach: Chernozhukov et al.(2007)}
+        \item Estimate ${\Theta}_I$ by the level set: $$\hat{\Theta}_I = \{\theta: Q_n(\theta) \leq \epsilon_n\},$$ where $\epsilon_n\to 0$ at an appropriate rate. (Recall the interval data example!)
+        \item In most regular problems choosing $\epsilon_n=c\log(n)/n$ for some constant $c$ is appropriate, and leads to an estimator of $\hat{\Theta}_I$ that is Hausdorff consistent.
+        \item Under some technical conditions on $Q_n$, it can be shown that $$d_H(\hat{\Theta}_I,\Theta_I)=O_p\left(\sqrt{\log(n)/n}\right).$$
+        \item This is close to the $\sqrt{n}$ rate we typically get for parametric estimation problems under point identification.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Criterion Function Approach}
+    \begin{itemize}
+        \item Inference is based on the contour set: $$\mathcal{C}_{n,\alpha} = \{\theta: Q_n(\theta) \leq c_{n,\alpha}\},$$ where $c_{n,\alpha}$ is a critical value (not a sequence).
+        \item The critical value $c_{n,\alpha}$ can be chosen either by subsampling or based on asymptotic approximations for particular forms of the objective function.
+        \item Chernozhukov et al.(2007) has shown that the contour set $\mathcal{C}_{n,\alpha}$ is asymptotically valid for the elements of the identified set: $$\liminf_{n\to\infty}P(\theta^{\prime}\in\mathcal{C}_{N,\alpha})\geq1-\alpha~for~any~\theta^{\prime}\in\Theta_I$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Criterion Function Approach}
+    \begin{itemize}
+        \item In words, the expansion-based estimator has a nice asymptotic property.
+        \item However, in many cases such an estimator is \textbf{biased} in \textbf{small} samples towards finding a too-small identified set, so it may be desirable to \textbf{bias-correct} the sampleanalog estimator.
+        \item Bias-correction estimator: see Haile and Tamer (2003), Kreider and Pepper (2007), Andrews and Shi (2013), and Chernozhukov et al. (2013).
+        \item Kaido and Santos (2014) study efficiency bounds when the moment inequalities and thus identified set is convex, finds the plug-in estimator is consistent, and proposes a valid bootstrap.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        \item Inference of a model based on moment inequality conditions is \textbf{ not straightforward}.
+        \item \textbf{Main Challenge:} The asymptotic distributions of the proposed test statistics tend to be not pivotal i.e. they depend on unknown features of the DGP.
+        \item Furthermore, the asymptotic distributions of the proposed test statistics depend on the "hold as equality" part of moment inequality conditions.
+        \item \textbf{Possible Responses:} We are going to quickly introduce the three methods:
+        \begin{itemize}
+            \item Least favorable approach(LF); from Rosen (2008).
+            \item Generalized moment selection approach (GMS); from Andrews and Soares (2010).
+            \item subsampling approach (SS); from Politis and Romano (1994).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{General Setup:}
+    \begin{itemize}
+        \item The true value $\theta_0$ satisfies $$\mathbb{E}(m_j(Z,\theta))\geq0\mathrm{~for~}j=1,\ldots,p$$ $$\mathbb{E}(m_j(Z,\theta))=0\mathrm{~for~}j=p+1,\ldots,p+v$$ where $m(\cdot,\theta)=(m_j(\cdot,\theta),j=1,\ldots,k)$ are known real-valued moment
+        functions.
+        \item $\theta_0$ may or may not be identified by the moment conditions.
+        \item Confidence sets for $\theta_0$ can be constructed by inverting a test $T_n(\theta)$ for testing $H_0:\theta=\theta_0:$
+        $$CS_n=\{\theta\in\Theta:T_n(\theta)\leq c(1-\alpha,\theta)\}$$
+        \item Consider the sample moment functions $\bar{m}_n(\theta)=(\bar{m}_{n,1}(\theta),\ldots,\bar{m}_{n,k}(\theta))^{\prime}$, where $$\bar{m}_{n,j}(\theta)=\frac{1}{n}\sum_{i=1}^nm_j(Z_i,\theta)\mathrm{~for~}j=1,\ldots,k$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        
+        \item Let $\hat{\Sigma}(\theta)$ be an estimator of the asymptotic variance, ${\Sigma}(\theta)$, of $\sqrt{n}\bar{m}_n(\theta)$.
+        \item For i.i.d. data we can take $$\hat{\Sigma}(\theta)=\frac{1}{n}\sum_{i=1}^n(m(Z_i,\theta)-\bar{m}_n(\theta))(m(Z_i,\theta)-\bar{m}_n(\theta))^{\prime}.$$
+        \item For some S real function on $\mathbb{R}_{[+\infty]}^p\times\mathbb{R}^v\times\mathcal{V}_{k\times k}$ the statistic $T_n(\theta)$ is of the form $$T_n(\theta)=S(n^{1/2}\bar{m}_n(\theta),\hat{\Sigma}(\theta)).$$
+        \item $\mathbb{R}_{[+\infty]}^p$ is space of p-vectors whose elements are either real or $+\infty$.
+        \item $\mathcal{V}_{k\times k}$ is the space of $k\times k$ matrices.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        
+        \item Different testing functions can be combined with different approaches to construct critical values.
+        \item \textbf{General idea:} Under mild conditions, we have that $$T_n(\theta)\overset{d}{\operatorname*{\operatorname*{\to}}}S(\Omega^{1/2}Z+h_1,\Omega).$$
+        \item $Z\sim N(0_k,I_k)$ is a standard normal vector.
+        \item $\Omega=\Omega(\theta)$ is the correlation matrix of $m(Z,\theta)$.
+        \item $h_1$ is a k-vector with $h_{1,j}=0$ for $j>p$ and $h_{1,j}\in[0,\infty]$ for $j\leq p$.
+        \item Ideally, ideally one would use the $(1-\alpha)$ quantile of $S(\Omega^{1/2}Z+h_1,\Omega)$.
+        \item This requires knowledge of $h_1$, which cannot be estimated consistently.
+        \item Different critical values are thus based on different approximations of $c_{h_1}(1-\alpha,\theta)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Approach 1: Least Favorable (LF)}
+    \begin{itemize} 
+        \item Rosen (2008) shows that distribution of $S(\Omega^{1/2}Z+h_1,\Omega)$ is stochastically largest when all moment inequalities are binding (i.e. hold as equalities).
+        \item The \textbf{“worst case”} is thus that $h_1 = 0_k$, and the least favorable
+        critical value is given by the $(1-\alpha)$ quantile of $S(\Omega^{1/2}Z+h_1,\Omega)$, denoted by $c_{0}(1-\alpha,\theta)$.
+        \item With $\hat{D}_n(\theta)=\operatorname{diag}(\hat{\Sigma}_n(\theta))$ define $\hat{\Omega}_n(\theta)=\hat{D}_n^{-1/2}(\theta)\hat{\Sigma}_n(\theta)\hat{D}_n^{-1/2}$.
+        \item Then LF critical value is $$c_{LF}(1-\alpha,\hat{\Omega}_n(\theta))=\inf\{x\in\mathbb{R}:P(S(\hat{\Omega}_n(\theta)^{1/2}Z,\hat{\Omega}_n(\theta))\leq x)\geq1-\alpha\}$$ for some random vector $Z\sim N(0_k,I_k)$ independent of the data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Results for LF Approach} 
+    \begin{itemize}
+        \item LF critical values are easy to implement, since they are very easy to
+        compute.
+        \item LF confidence sets are asymptotically valid in a uniform sense i.e. $$\liminf_{n\to\infty}\inf_{P\in\mathscr{P}}P(\theta_0\in CS_n^{LF})\geq1-\alpha$$
+        \item LF critical values are conservative, since they are based on the least
+        favorable case.
+        \item LF critical values does not require determining a different critical value for each value of the parameter.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Approach 2: Generalized Moment Selection (GMS)} 
+    \begin{itemize}
+        \item \textbf{Basic Idea:} To figure out which moment inequalities are binding from the data.
+        \item For some $\kappa_{n}\to\infty$ at a suitable rate e.g. $\kappa_n=\sqrt{2\log(\log(n)))}$, define $$\xi_n(\theta)=\kappa_n^{-1}\hat{D}_n^{-1/2}(\theta)n^{1/2}\bar{m}_n(\theta).$$
+        \item $\xi_n(\theta)$ is vector of normalized sample moments
+        \item If $\xi_{n,j}(\theta)$ is \textbf{“large and positive”} then jth inequality “seems” not to be binding.
+        \item If $\xi_{n,j}(\theta)$ is \textbf{“close to zero or negative”} then jth inequality “seems” to be binding.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        \item GMS replaces h1 in limiting distribution by $\varphi(\xi_n(\theta),\hat{\Omega}_n(\theta))$.
+        \item Function $\varphi=(\varphi_1,\ldots,\varphi_p,0_v)$ can be chosen by the researcher, e.g.
+        $$\begin{aligned}&\varphi_j^{(1)}(\xi,\Omega)=\infty\mathbb{I}\{\xi_j>1\}\mathrm{~(with~0}\infty=0)\\&\varphi_j^{(2)}(\xi,\Omega)=(\xi_j)_+\\&\varphi_j^{(3)}(\xi,\Omega)=\xi_j\end{aligned}$$
+        \item GMS critical value is $$\begin{aligned}&c_{GMS}(1-\alpha,\hat{\Omega}_n(\theta),\kappa_n)\\&=\inf\{x\in\mathbb{R}:\Pr(S(\hat{\Omega}_n(\theta)^{1/2}Z+\varphi(\xi_n(\theta),\hat{\Omega}_n(\theta)),\hat{\Omega}_n(\theta))\leq x)\geq1-\alpha\}\end{aligned}$$ for some random vector $Z\sim N(0_k,I_k)$ independent of the data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Results for GMS Approach} 
+    \begin{itemize}
+        \item GMS critical values are also easy to implement.
+        \item GMS confidence sets are asymptotically valid in a uniform sense.
+        $$\liminf_{n\to\infty}\inf_{P\in\mathscr{P}}P(\theta_0\in CS_n^{GMS})\geq1-\alpha.$$
+        \item Under certain technical conditions,  $CS^{GMS}_n$ are not asymptotically conservative.
+        \item $CS^{GMS}_n$ have smaller volume than those based on $CS^{LF}_n$.
+        \item $CS^{GMS}_n$ depend on (arbitrary) choice of function $\varphi$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Approach 3: Subsampling (SS).}
+    \begin{itemize}
+        \item Subsampling tries to approximate the distribution of $T_n(\theta)$ directly.
+        \item \textbf{Basic Idea:} Suppose we could restart the data generating process as often
+        as we wanted, and generated arbitrary many data sets $\{Z_i,i=1,\ldots,n\}$. We could compute $T_n(\theta)$ for each new data set, and thus determine its distribution exactly.
+        \item The infeasible approach version:
+        \begin{itemize}
+            \item Draw small subsamples of size $b\ll n$ from the full data set (without
+            replacement).
+            \item Compute test statistic for each subsample.
+            \item Use empirical distribution of subsample test statistics as an
+            approximation to the distribution of $T_n(\theta)$.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    
+    \begin{itemize}
+        \item Let $b_n$ denote subsample size, which satisfies $b_n\to\infty$ and $b_n/n\to0$ as $n\to\infty$.
+        \item There are $q_n=n!/((n-b_n)!b_n!)$ subsamples of size $b_n$.
+        \item Let $T_{n,b,s}(\theta)$ be the test statistic on the sth subsample of size $b_n$.
+        \item The empirical CDF of $T_{n,b,s}(\theta)$ is given by $$U_{n,b}(x,\theta)=\frac{1}{q_n}\sum_{s=1}^{q_n}\mathbb{I}\{T_{n,b,s}(\theta)\leq x\}.$$
+        \item SS critical value is
+        $$c_{SS}(1-\alpha,\theta,b)=\inf\{x\in\mathbb{R}:U_{n,b}(x,\theta)\geq1-\alpha\}$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \textbf{Results for SS Approach} 
+    \begin{itemize}
+        \item Computationally intensive, but works in theory under very weak conditions.
+        \item SS confidence sets are asymptotically valid in a uniform sense and can be not asymptotically conservative under some certain conditions.
+        \item SS test has less power than GMS test against certain local
+        alternatives (and hence leads to asymptotically larger confidence
+        sets).
+        \item SS approximation can be unreliable in small or mid-size data sets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Moment Inequalities}
+    \begin{itemize}
+        \item There is a large literature on the advantages and disadvantages of
+        different approaches to compute test statistics and critical values.
+        \item Andrews and Jia (2011) recommend using a slightly modified version
+        of the QLR statistic together with a particular GMS critical value.
+        \item Bugni et al. (2011) study the properties of the confidence sets under
+        local misspecification, finding that
+        \begin{itemize}
+            \item LF critical values are more robust than GMS and SS critical values,
+            \item GMS and SS critical values are equally robust.
+        \end{itemize}
+        \item There thus seems to be a \textbf{tradeoff between efficiency and robustness}.
+    \end{itemize}
+\end{frame}
+
+
+% Random Sets
+\begin{frame}{Methods: Random Sets}
+    \begin{itemize}
+        \item \textbf{Fact:} Many models exhibiting partial identification can be represented as involving a set of random variables that are compatible with the assumptions and the observed data.
+        \item Sets are central to partial identification.
+        \item Essentially, a set of random variables is a random set. Therefore, the random set framework is a natural generalization of the random variable framework.
+        \item \texttt{Theory of Random Sets} (Molchanov, 2017)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Random Sets}
+
+    \begin{block}{Definition. (Random closed set)}
+        A map $X$ from a probability space $(\Omega,\mathscr{F},\mathbb{P})$ to the family $\mathcal{F}$ of closed subsets of $\mathbb{R}^d$ is called a random closed set if
+        $$\{\omega\in\Omega:X(\omega)\cap K\neq\emptyset\}\in\mathscr{F}$$
+        where $\mathscr{F}$ is the $\sigma$-algebra on $\Omega$ for each compact set K in $\mathbb{R}^d$ .
+    \end{block}
+
+    \begin{block}{Definition. (Capacity functional)}
+    A functional $T_X(K):\mathcal{K}\mapsto[0,1]$ given by
+    $$T_X(K)=\mathbb{P}\{X\cap K\neq\emptyset\},\quad K\in\mathcal{K},$$
+    is called capacity functional (or hitting probability) of X.
+    \end{block}
+
+\end{frame}
+
+\begin{frame}{Methods: Random Sets}
+    \begin{block}{Definition. (Measurable selection)} For any random set $X$, a (measurable) selection of $X$ is a random element $x$ with values in $\mathbb{R}^d$ such that $x(\omega) \in X(\omega)$ almost surely. 
+    \end{block}
+    \begin{itemize}
+        \item Informally, the random set contains the random selections.
+        \item A “selection” of a random set $X$ is a random quantity $x$, also a mapping from the elements of the underlying probability space, whose realization is contained in $X$ for every realization of the underlying probability space.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Random Sets}
+    \begin{block}{Theorem. (Artstein's inequality)}
+        A probability distribution $F$ on $\mathbb{R}^d$ is the distribution of a selection of a random closed set $X$ in $\mathbb{R}^d$ if and only if $$F(K)\leq T_X(K)=\mathbb{P}\{X\cap K\neq\emptyset\}$$ for all compact sets $K\subseteq\mathbb{R}^d$.
+    \end{block}
+
+    \begin{itemize}
+        \item This characterizes the possible distributions of the selection associated with a random set. For each such $F$, it is possible to construct selections $x$ with distribution $F$ that belongs to $X$ almost surely.
+        \item It says that the set of distributions of the set of selections of a random set are exactly those distributions F such that $F(K)\leq\mathbb{P}\{X\cap K\neq\emptyset\}$ for all compact sets K.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Random Sets}
+    \begin{block}{Theorem. (Law of large numbers for integrably bounded random sets)} 
+        Let $X, X_1, X_2,\ldots$ be $i.i.d.$ integrably bounded random compact sets. Define $S_n = X_1 + \ldots + X_n$. Then
+        $$d_H\left(\frac{{S}_n}{n},\mathbb{E}(X)\right)\to0\quad a.s.\mathrm{~}as\mathrm{~}n\to\infty.$$
+    \end{block}
+    \begin{itemize}
+        \item If $X$ is almost surely non-empty and its norm $\|X\|=\sup\{\|x\|:x\in X\}$ is an integrable random variable, then $X$ is said to be \textbf{integrably bounded} and all its selections are integrable.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Methods: Random Sets}
+    \begin{block}{Theorem. (Central limit theorem for random closed sets)} 
+        Let $X, X_1, X_2,\ldots$ be $i.i.d.$ copies of a random closed set $X$ in $\mathbb{R}^d$ such that $\mathbb{E}\|X\|^2<\infty$, and let $S_n = X_1 + \ldots + X_n$. Then as $n\to\infty$,
+        $$\sqrt{n}d_H\left(\frac{S_n}{n},\mathbb{E}X\right)\Rightarrow\|\zeta\|_\infty=\sup\left\{|\zeta(u)|:u\in\mathbb{S}^{d-1}\right\}$$
+        where $\zeta$ is a centered Gaussian random field on $\mathbb{S}^{d-1}$ with covariance function $\mathbb{E}\zeta(u)\zeta(v)=\mathbb{E}\|X\|^2u\cdot v$, $u,v\in\mathbb{S}^{d-1}$.
+    \end{block}
+\end{frame}
+
+% Impelemention
+\section{Impelemention}
+\begin{frame}{Impelemention}
+    \begin{itemize}
+        \item In point identified models, we hope to find the solution to
+        \begin{itemize}
+            \item $Q_N(\theta)=0$, or
+            \item $\max_{\theta\in\Theta}Q_N(\theta)$.
+        \end{itemize}   
+        \item In partially identified models, we hope to find \textbf{all} the solutions to
+        \begin{itemize}
+            \item $Q_N(\theta)=0$,or
+            \item $Q_N(\theta)\leq\epsilon_N$, or
+            \item $\max_{\theta\in\Theta}Q_N(\theta)$
+        \end{itemize} 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Impelemention}
+    \begin{itemize}
+        \item Grid search:
+        \begin{itemize}
+            \item For many candidates $\theta^{\prime}$, we should check whether  $Q_N(\theta^{\prime})\approx0$ or $Q_N(\theta^{\prime})\approx\max Q_N(\theta)$
+            \item Slow (especially for inference)!
+            \item Use parallel programming to speed up.
+        \end{itemize}   
+        \item Represent the identified set in a less computationally costly way:
+        \begin{itemize}
+            \item e.g. $\Theta_I=\{\theta:E(Y_L)\leq\theta\leq E(Y_U)\}$, almost no computational burden.
+            \item e.g. try to write it in terms of a linear programming problem rather than a non-linear programming problem.
+            \item $\max_{\theta\in\Theta}Q_N(\theta)$
+        \end{itemize} 
+        \item Abandon some moment conditions \ldots
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Impelemention}
+    \textbf{Kline and Tamer (2016)}
+    \begin{itemize}
+        \item Simulation-based Bayesian approach.
+        \item Moment inequalities: $P(Y|X=x)\leq m(x;\theta)$, where data on $(Y, X)$ are available, $m(\cdot)$ is known.
+        \item The identified set: $\Theta_I=\{\theta:P(Y|X=x)\leq m(x;\theta)\quad\forall x\in\mathcal{S}_X\}$, where $\mathcal{S}_X$ is the support of $X$.
+        \item Basic idea: 
+        \begin{itemize}
+            \item firstly, construct posterior distributions on the finite dimensional vector $P(Y|X)$ 
+            \item use draws from this posterior to construct a posterior distribution for $\Theta_I$ via the identified set mapping.
+        \end{itemize}   
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Impelemention}
+    \textbf{Chen et al. (2018)}
+    \begin{itemize}
+        \item Monte Carlo simulation methods from a quasi-posterior.
+        \item Start with an optimal objective function $L(\theta)$, e.g. 
+        \begin{itemize}
+            \item a likelihood, or
+            \item an optimally weighted GMM, or
+            \item an optimal moment inequality objective function.
+        \end{itemize}
+        \item The identified set: $$\Theta_I=\left\{\theta\in\Theta:L(\theta)=\sup_{\vartheta\in\Theta}L(\vartheta)\right\}.$$
+        It can be a singleton.
+        \item $L_N(\theta)$ is a sample analog of $L(\theta)$. Let $\hat{\theta}\in\Theta$ denote an approximate maximizer of $L_N$ i.e. $L_n(\hat{\theta})=\sup_{\theta\in\Theta}L_n(\theta)+o_p(n^{-1})$.
+        
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Impelemention}
+    \begin{itemize}
+        \item To construct confidence sets for the identified set:
+        \begin{itemize}
+            \item Draw a sample $\{\theta^1,\ldots,\theta^B\}$ from the quasi-posterior distribution $\Pi_n$:
+            $$\mathrm{d}\Pi_n(\theta|\mathbf{X}_n)=\frac{e^{nL_n(\theta)}\mathrm{d}\Pi(\theta)}{\int_\Theta e^{nL_n(\theta)}\mathrm{d}\Pi(\theta)}.$$
+            \item Calculate the $(1-\alpha)$ quantile of $\{L_n(\theta^1),\ldots,L_n(\theta^B)\}$, denoted by $\zeta_{n,\alpha}^{\mathrm{mc}}$.
+            \item The $100\alpha\%$ confidence set for $\Theta_I$ is then $$\hat{\Theta}_\alpha=\{\theta\in\Theta:L_n(\theta)\geq\zeta_{n,\alpha}^{\mathrm{mc}}\}.$$
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Impelemention}
+    \textbf{What to report?}
+    \begin{itemize}
+        \item If $\theta=(\theta_1,\theta_2,\ldots,\theta_K)$ is the parameter of the model, 
+        \begin{itemize}
+            \item the identified set for $\theta$ is $\Theta_I$.
+            \item the identified set for $\theta_k$ is $\Theta_{I,k}$.
+        \end{itemize}
+    \item If $dim(\theta)\le 3$, report the identified set graphically.
+    \item Otherwise , partition $\theta$ into $\theta=(\theta^{(1)},\theta^{(2)})$ such that $dim(\theta^{(1)})\le 3$. Then report $\theta^{(1)}$ graphically at various specified values for $\theta^{(2)}$.
+    \end{itemize}
+\end{frame}
+
+% Conclusion
+\section{Conclusion}
+\begin{frame}{Conclusion}
+    \begin{itemize}
+        \item \textbf{The law of decreasing credibility}
+        \begin{itemize}
+            
+            \item The credibility of inference decreases with the strength of the assumptions maintained. ——Manski (2003)
+            \item the strength of assumptions v.s. credibility of the results.
+
+            \item Avoid taking things to the extreme: Partial identification results are not {\em per se} necessarily better than point identification results.
+        \end{itemize}
+        \item \textbf{Misspecification in model with moment inequalities}
+        \item \textbf{Limited software implementations}
+        \begin{itemize}
+            \item Stata packages: \texttt{clrbound}, \texttt{tebounds}, \texttt{cmi\_test} \ldots
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
 % Section 2
-\section{Methods}
-\begin{frame}{Methods}
-    \begin{block}{Important Block}
-        Key information goes here
-    \end{block}
+
+% \section{Methods}
+% \begin{frame}{Methods}
+%     \begin{block}{Important Block}
+%         Key information goes here
+%     \end{block}
     
-    \begin{itemize}
-        \item Method 1
-        \item Method 2
-    \end{itemize}
-\end{frame}
+%     \begin{itemize}
+%         \item Method 1
+%         \item Method 2
+%     \end{itemize}
+% \end{frame}
 
-% Section 3
-\section{Results}
-\begin{frame}{Results}
-    \begin{columns}
-        \column{0.5\textwidth}
-        \begin{itemize}
-            \item Result 1
-            \item Result 2
-        \end{itemize}
+% % Section 3
+% \section{Results}
+% \begin{frame}{Results}
+%     \begin{columns}
+%         \column{0.5\textwidth}
+%         \begin{itemize}
+%             \item Result 1
+%             \item Result 2
+%         \end{itemize}
         
-        \column{0.5\textwidth}
-        % Placeholder for a figure
-        \centering
-        [Your figure here]
-    \end{columns}
-\end{frame}
+%         \column{0.5\textwidth}
+%         % Placeholder for a figure
+%         \centering
+%         [Your figure here]
+%     \end{columns}
+% \end{frame}
 
-% Section 4
-\section{Conclusion}
-\begin{frame}{Conclusion}
-    \begin{itemize}
-        \item Main finding 1
-        \item Main finding 2
-        \item Future work
-    \end{itemize}
-\end{frame}
+% % Section 4
+% \section{Conclusion}
+% \begin{frame}{Conclusion}
+%     \begin{itemize}
+%         \item Main finding 1
+%         \item Main finding 2
+%         \item Future work
+%     \end{itemize}
+% \end{frame}
 
 \end{document} 
